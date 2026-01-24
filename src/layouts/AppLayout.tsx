@@ -1,15 +1,25 @@
 // Components
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../components/header";
+import { useEffect } from "react";
 
 const AppLayout = () => {
-  return (
-    <div className="w-full bg-(--background) text-(--foreground)">
-      <Header />
+  const navigate = useNavigate();
 
-      <div className="p-3">
-        <Outlet />
-      </div>
+  useEffect(() => {
+    const fetchToken = async () => {
+      chrome.storage.local.get("readlaterToken", (result) => {
+        if (!result["readlaterToken"]) navigate("/auth");
+      });
+    };
+
+    fetchToken();
+  }, []);
+
+  return (
+    <div className="w-full">
+      <Header />
+      <Outlet />
     </div>
   );
 };

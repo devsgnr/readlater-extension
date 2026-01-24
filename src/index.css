@@ -19,6 +19,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   --extension-width: 320px;
+  --extension-height: 380px;
 
   --radius: 0.625rem;
 
@@ -79,19 +80,18 @@
   --ring: oklch(0.552 0.016 285.938);
 }
 
-html {
-  padding: theme(padding.3);
-}
-
 html,
-body {
+body,
+#root {
+  margin: 0;
+  padding: 0;
   width: var(--extension-width);
-  border-radius: var(--radius);
+  max-width: var(--extension-width);
+  max-height: var(--extension-height);
   overflow: hidden;
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
   background-color: var(--background);
+  color: var(--foreground);
 }
