@@ -5,7 +5,7 @@ const Auth = () => {
   useEffect(() => {
     setTimeout(() => {
       chrome.tabs.create({
-        url: `${import.meta.env.VITE_BASE_URL}/authorize`,
+        url: `${import.meta.env.VITE_BASE_URL}/sign-in`,
       });
     }, 1500);
   }, []);

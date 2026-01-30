@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Readlater Saver",
-  "description": "Save text to Readlater.fyi for later (pun intented)",
+  "description": "Save text to Readlater.fyi",
   "version": "1.0.0",
   "permissions": ["contextMenus", "storage", "activeTab"],
   "background": {

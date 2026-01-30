@@ -6,7 +6,7 @@
   --font-expose: "Expose-Variable", system-ui, sans-serif;
   --font-sans: "OpenRunde", system-ui, sans-serif;
 
-  font-family: var(--font-sans);
+  font-family: var(--font-sans) !important;
   font-weight: 400;
 
   color-scheme: light dark;
@@ -89,6 +89,8 @@ body,
   max-width: var(--extension-width);
   max-height: var(--extension-height);
   overflow: hidden;
+  border-radius: var(--radius);
+  border: none;
 }
 
 body {

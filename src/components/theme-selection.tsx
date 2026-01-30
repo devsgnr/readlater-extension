@@ -15,7 +15,7 @@ const ThemeSelection = () => {
     <div className="flex items-start justify-between">
       <div className="flex flex-col items-start">
         <p className="text-sm font-semibold font-expose">Theme</p>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs font-sans text-muted-foreground">
           Readlater Extension Theme
         </p>
       </div>
