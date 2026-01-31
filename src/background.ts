@@ -52,5 +52,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type !== "READLATER_PREPARE_DATA") return;
 
-  console.log(message.payload);
+  chrome.storage.local.set({ READLATER_PAYLOAD: message.payload }, () => {
+    chrome.action.openPopup().catch((e) => {
+      console.log(e);
+    });
+  });
 });

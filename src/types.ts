@@ -28,4 +28,14 @@ type GetCollectionResponse = {
   };
 };
 
-export type { User, Collection, GetCollectionResponse };
+type CreateBookmarkInput = {
+  bookmark: {
+    content: string;
+    title: string;
+    url: string;
+    description: string;
+  };
+  collections?: string[] | undefined;
+};
+
+export type { User, Collection, GetCollectionResponse, CreateBookmarkInput };

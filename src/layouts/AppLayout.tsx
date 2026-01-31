@@ -4,6 +4,7 @@ import Header from "../components/header";
 import { useEffect } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ExtAppClient } from "@/api";
+import PayloadProvider from "@/provider/PayloadProvider";
 
 const AppLayout = () => {
   const navigate = useNavigate();
@@ -20,10 +21,12 @@ const AppLayout = () => {
 
   return (
     <QueryClientProvider client={ExtAppClient}>
-      <div className="w-full">
-        <Header />
-        <Outlet />
-      </div>
+      <PayloadProvider>
+        <div className="w-full">
+          <Header />
+          <Outlet />
+        </div>
+      </PayloadProvider>
     </QueryClientProvider>
   );
 };
