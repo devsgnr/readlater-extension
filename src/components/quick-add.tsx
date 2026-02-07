@@ -26,7 +26,7 @@ const QuickAdd = ({ user }: Props) => {
     mutate(payload, {
       onSuccess: () => {
         console.log("Success");
-        chrome.storage.local.remove("READLATER_PAYLOAD");
+        chrome.storage.session.remove("READLATER_PAYLOAD");
       },
     });
   };

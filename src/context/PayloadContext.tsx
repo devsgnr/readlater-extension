@@ -6,8 +6,8 @@ type PayloadContextType = {
   setPayload: React.Dispatch<SetStateAction<CreateBookmarkInput | undefined>>;
 };
 
-const PayloadContext = createContext<PayloadContextType>(
-  {} as PayloadContextType,
+const PayloadContext = createContext<PayloadContextType | undefined>(
+  undefined,
 );
 
 export type { PayloadContextType };

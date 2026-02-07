@@ -12,9 +12,8 @@ const PayloadProvider = ({ children }: Props) => {
   const [payload, setPayload] = useState<CreateBookmarkInput>();
 
   useEffect(() => {
-    chrome.storage.local.get("READLATER_PAYLOAD", (res) => {
-      setPayload({ bookmark: res["READLATER_PAYLOAD"] as any });
-    });
+    const payload = (window as any).__READLATER_PAYLOAD__;
+    setPayload({ bookmark: payload });
   }, []);
 
   return (

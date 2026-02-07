@@ -1,25 +1,50 @@
+import { GetCollections } from "./api/queries";
+
 /**
  * Background listener for handling authorization the
  * Readlater Saver extension
  */
 chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
-  if (msg.action === "READLATER_AUTH") {
-    const token = msg.token;
+  (async () => {
+    switch (msg.action) {
+      case "OPEN_AUTH_TAB":
+        await chrome.tabs.create({ url: msg.url });
+        sendResponse({ status: "ok" });
+        break;
+      case "GET_READLATER_COLLECTIONS":
+        const { data } = await GetCollections();
+        sendResponse({ ...data.result.data });
+        break;
+    }
+  })();
 
-    chrome.storage.local.set({ READLATER_TOKEN: token });
-    sendResponse({ status: "ok" });
-  }
+  return true;
 });
 
 /**
- * Background listener for handling revoking authorization
- * for the Readlater Saver extension
+ * Background listener for external messages from web app
  */
-chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
-  if (msg.action === "READLATER_REVOKE") {
-    chrome.storage.local.remove("READLATER_TOKEN");
-    sendResponse({ status: "ok" });
+chrome.runtime.onMessageExternal.addListener(async (msg, _, sendResponse) => {
+  switch (msg.action) {
+    case "READLATER_AUTH":
+      /**
+       * Background listener for handling adding authorization
+       * for the Readlater Saver extension
+       */
+      await chrome.storage.local.set({ READLATER_TOKEN: msg.token });
+      sendResponse({ status: "ok" });
+      break;
+    case "READLATER_REVOKE":
+      /**
+       * Background listener for handling revoking authorization
+       * for the Readlater Saver extension
+       */
+      await chrome.storage.local.remove("READLATER_TOKEN");
+      sendResponse({ status: "ok" });
+      break;
   }
+
+  return true;
 });
 
 /**
@@ -36,25 +61,52 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 /** Continuation: Listener for click from the click above */
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   /** Check for correct menu ID & Tab ID */
-  if (info.menuItemId !== "SAVE_TO_READLATER" || !tab?.id) return;
+  if (info.menuItemId !== "SAVE_TO_READLATER" || !tab?.id || !tab.url) return;
 
-  chrome.tabs.sendMessage(tab.id, {
-    type: "GET_HIGHLIGHT_DATA",
-  });
+  /** Make sure to run only in the right environment */
+  if (!tab.url.startsWith("http")) return;
+
+  /** Check if script is already injected */
+  try {
+    await chrome.tabs.sendMessage(tab.id, { type: "PING" });
+    /** Script already injected, just send the message */
+    await chrome.tabs.sendMessage(tab.id, { type: "GET_HIGHLIGHT_DATA" });
+  } catch {
+    /** Script not injected, inject it first */
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ["content.js"],
+    });
+    /** Wait for script to load, then send message */
+    setTimeout(async () => {
+      await chrome.tabs.sendMessage(tab.id!, { type: "GET_HIGHLIGHT_DATA" });
+    }, 100);
+  }
 });
 
 /**
- * Await message for getting prepare and moving into
- * persistence phase, and cleaning out data
+ * Background listener for when the Extension Icon is clicked
+ * and then we can go ahead to perform the Inject
  */
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.type !== "READLATER_PREPARE_DATA") return;
 
-  chrome.storage.local.set({ READLATER_PAYLOAD: message.payload }, () => {
-    chrome.action.openPopup().catch((e) => {
-      console.log(e);
+chrome.action.onClicked.addListener(async (tab) => {
+  /** Check for Tab ID and URL */
+  if (!tab?.id || !tab.url) return;
+
+  /** Make sure to run only in the right environment */
+  if (!tab.url.startsWith("http")) return;
+
+  /** Check if script is already injected */
+  try {
+    await chrome.tabs.sendMessage(tab.id, { type: "PING" });
+    /** Script already injected, do nothing or show UI again */
+  } catch {
+    /** Script not injected, inject it */
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ["content.js"],
     });
-  });
+  }
 });

@@ -38,7 +38,7 @@ const Header = () => {
           size="icon-sm"
           variant="ghost"
           className="size-6 hover:text-destructive"
-          onClick={() => window.close()}
+          onClick={() => window.postMessage({ type: "CLOSE_UI" }, "*")}
         >
           <X size={16} />
         </Button>

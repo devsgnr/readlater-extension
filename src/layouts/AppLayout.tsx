@@ -4,29 +4,24 @@ import Header from "../components/header";
 import { useEffect } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ExtAppClient } from "@/api";
-import PayloadProvider from "@/provider/PayloadProvider";
 
 const AppLayout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchToken = async () => {
-      chrome.storage.local.get("READLATER_TOKEN", (result) => {
-        if (!result["READLATER_TOKEN"]) navigate("/auth");
-      });
-    };
-
-    fetchToken();
-  }, []);
+    chrome.storage.local.get("READLATER_TOKEN", (result) => {
+      if (!result["READLATER_TOKEN"]) {
+        navigate("/auth", { replace: true });
+      }
+    });
+  }, [navigate]);
 
   return (
     <QueryClientProvider client={ExtAppClient}>
-      <PayloadProvider>
-        <div className="w-full">
-          <Header />
-          <Outlet />
-        </div>
-      </PayloadProvider>
+      <div className="w-full bg-background text-foreground rounded-[8px]">
+        <Header />
+        <Outlet />
+      </div>
     </QueryClientProvider>
   );
 };

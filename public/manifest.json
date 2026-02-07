@@ -3,20 +3,23 @@
   "name": "Readlater Saver",
   "description": "Save text to Readlater.fyi",
   "version": "1.0.0",
-  "permissions": ["contextMenus", "storage", "activeTab"],
+  "permissions": ["contextMenus", "storage", "activeTab", "tabs", "scripting"],
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
-  "content_scripts": [
+  "content_scripts": [],
+  "action": {},
+  "host_permissions": ["http://localhost:3002/*", "https://*.readlater.fyi/*"],
+  "externally_connectable": {
+    "matches": ["http://localhost:3002/*", "https://*.readlater.fyi/*"]
+  },
+  "web_accessible_resources": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "resources": ["app.js", "readlater-extension.css"],
+      "matches": ["<all_urls>"]
     }
   ],
-  "action": {
-    "default_popup": "index.html"
-  },
   "icons": {
     "16": "16x16.png",
     "48": "48x48.png",

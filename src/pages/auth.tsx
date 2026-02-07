@@ -4,10 +4,13 @@ import { useEffect } from "react";
 const Auth = () => {
   useEffect(() => {
     setTimeout(() => {
-      chrome.tabs.create({
-        url: `${import.meta.env.VITE_BASE_URL}/sign-in`,
+      chrome.runtime.sendMessage({
+        action: "OPEN_AUTH_TAB",
+        url: `${import.meta.env.VITE_BASE_URL}/authorize`,
       });
-    }, 1500);
+
+      window.postMessage({ type: "CLOSE_UI" }, "*");
+    }, 1000);
   }, []);
 
   return (
