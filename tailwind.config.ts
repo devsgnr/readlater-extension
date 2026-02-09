@@ -13,10 +13,9 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)"],
-        switzer: ["var(--font-switzer)"],
-        expose: ["var(--font-expose)"],
-        mono: ["var(--font-geist-mono)"],
+        sans: ['"OpenRunde"', "system-ui", "sans-serif"],
+        switzer: ['"Switzer-Variable"', "system-ui", "sans-serif"],
+        expose: ['"Expose-Variable"', "system-ui", "sans-serif"],
       },
       colors: {
         border: "var(--border)",

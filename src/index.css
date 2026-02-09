@@ -1,3 +1,7 @@
+@import "../public/fonts/open_runde/stylesheet.css";
+@import "../public/fonts/switzer/switzer.css";
+@import "../public/fonts/expose/expose.css";
+
 @import "tailwindcss";
 @config "../tailwind.config.ts";
 
@@ -6,8 +10,6 @@
 :host *::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
-  --tw-translate-x: 0;
-  --tw-translate-y: 0;
   --tw-rotate: 0;
   --tw-skew-x: 0;
   --tw-skew-y: 0;
@@ -57,6 +59,11 @@
   --tw-contain-style: ;
   --tw-border-style: solid;
   --tw-border-color: currentColor;
+}
+
+:host *[class*="translate-"],
+:host *[class*="-translate-"] {
+  translate: var(--tw-translate-x, 0) var(--tw-translate-y, 0);
 }
 
 :host {
@@ -154,4 +161,36 @@ body,
 body {
   background-color: var(--background);
   color: var(--foreground);
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  /* Thumb only */
+  .scrollbar-thumb-only {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ring) transparent;
+  }
+
+  .scrollbar-thumb-only::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .scrollbar-thumb-only::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thumb-only::-webkit-scrollbar-thumb {
+    background-color: var(--ring);
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
 }

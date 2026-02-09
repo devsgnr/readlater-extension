@@ -9,19 +9,19 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("OpenRunde-Medium.woff2") format("woff2");
+  src: url("/fonts/open_runde/OpenRunde-Medium.woff2") format("woff2");
 }
 @font-face {
   font-family: "OpenRunde";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("OpenRunde-SemiBold.woff2") format("woff2");
+  src: url("/fonts/open_runde/OpenRunde-SemiBold.woff2") format("woff2");
 }
 @font-face {
   font-family: "OpenRunde";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("OpenRunde-Bold.woff2") format("woff2");
+  src: url("/fonts/open_runde/OpenRunde-Bold.woff2") format("woff2");
 }

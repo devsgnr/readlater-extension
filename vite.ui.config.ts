@@ -8,6 +8,7 @@ export default defineConfig({
   css: {
     lightningcss: undefined,
     transformer: "postcss",
+    postcss: { plugins: [] },
   },
   resolve: {
     alias: {
@@ -19,6 +20,8 @@ export default defineConfig({
     "process.env.NODE_ENV": JSON.stringify("production"),
   },
   build: {
+    minify: false,
+    cssMinify: false,
     emptyOutDir: false,
     lib: {
       entry: path.resolve(__dirname, "src/App.tsx"),
@@ -27,7 +30,6 @@ export default defineConfig({
       fileName: () => "app.js",
     },
     cssCodeSplit: false,
-    minify: true,
     rollupOptions: {
       external: [],
     },

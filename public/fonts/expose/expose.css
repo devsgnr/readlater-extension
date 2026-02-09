@@ -25,9 +25,9 @@
 @font-face {
   font-family: "Expose-Variable";
   src:
-    url("Expose-Variable.woff2") format("woff2"),
-    url("Expose-Variable.woff") format("woff"),
-    url("Expose-Variable.ttf") format("truetype");
+    url("/fonts/expose/Expose-Variable.woff2") format("woff2"),
+    url("/fonts/expose/Expose-Variable.woff") format("woff"),
+    url("/fonts/expose/Expose-Variable.ttf") format("truetype");
   font-weight: 400 900;
   font-display: swap;
   font-style: normal;

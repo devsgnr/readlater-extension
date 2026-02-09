@@ -4,10 +4,11 @@ import { createContext, type SetStateAction } from "react";
 type PayloadContextType = {
   payload: CreateBookmarkInput | undefined;
   setPayload: React.Dispatch<SetStateAction<CreateBookmarkInput | undefined>>;
+  handleCollectionToggle: (id: string) => void;
 };
 
-const PayloadContext = createContext<PayloadContextType | undefined>(
-  undefined,
+const PayloadContext = createContext<PayloadContextType>(
+  {} as PayloadContextType,
 );
 
 export type { PayloadContextType };

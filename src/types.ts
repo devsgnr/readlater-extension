@@ -39,6 +39,7 @@ type CreateBookmarkInput = {
     title: string;
     url: string;
     description: string;
+    image: string;
   };
   collections?: string[] | undefined;
 };

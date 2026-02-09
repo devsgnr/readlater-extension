@@ -1,49 +1,77 @@
+import { useChromeRuntimeCreateBookmark } from "@/api/hooks/mutations";
 import { useChromeRuntimeGetCollections } from "@/api/hooks/queries";
 import CollectionList from "@/components/collection-list";
 import QuickAdd from "@/components/quick-add";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader } from "lucide-react";
+import { usePayloadContext } from "@/hooks";
+import { Loader, Plus } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { payload } = usePayloadContext();
   const { data, isLoading } = useChromeRuntimeGetCollections();
+  const { mutate, isPending } = useChromeRuntimeCreateBookmark();
+
+  const handleSave = () => {
+    if (!payload) return;
+
+    mutate(payload, {
+      onSuccess: () => {
+        (window as any).__READLATER_PAYLOAD__ = undefined;
+        window.postMessage({ type: "CLOSE_UI" }, "*");
+      },
+    });
+  };
+
+  const Collections = payload?.collections;
+  const isEmpty = !Collections || Collections?.length === 0;
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-1">
-        <div className="flex flex-col">
-          {isLoading && !data && (
-            <div className="w-full h-full flex flex-col gap-1 items-center justify-center pb-3 text-muted-foreground">
-              <Loader strokeWidth={1} size={32} className="animate-spin" />
-              <p className="text-xs text-center">Loading...</p>
-            </div>
-          )}
-
-          {!isLoading && data && (
-            <div className="flex flex-col gap-2 p-1.5 px-1.5 pt-2 pb-0">
-              <QuickAdd user={data.user} />
-
-              <div className="w-full h-full flex flex-col gap-1 pb-2">
-                <div className="flex w-full items-center justify-between">
-                  <p className="font-medium text-xs text-muted-foreground">
-                    Collections
-                  </p>
-                </div>
-
-                <ScrollArea className="h-64 rounded-[8px] **:data-[slot=scroll-area-scrollbar]:hidden">
-                  <CollectionList collections={data.collections} />
-                </ScrollArea>
-              </div>
-
-              <div className="w-full">
-                <Button className="w-full" size="lg">
-                  Save
-                </Button>
-              </div>
-            </div>
-          )}
+    <div className="flex flex-col py-2">
+      {isLoading && !data && (
+        <div className="w-full h-full flex flex-col gap-1 items-center justify-center py-1.5 text-muted-foreground">
+          <Loader strokeWidth={2} size={32} className="animate-spin" />
+          <p className="text-xs text-center">Loading...</p>
         </div>
-      </div>
+      )}
+
+      {!isLoading && data && (
+        <div className="w-full flex flex-col gap-3 px-2 pb-0">
+          <QuickAdd user={data.user} />
+
+          <div className="w-full h-full flex flex-col gap-1.5">
+            <div className="flex w-full items-center justify-between text-xs text-muted-foreground!">
+              <p className="font-medium">Collections</p>
+
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-fit py-0.5 px-1 text-xs items-center cursor-pointer hover:text-muted-foreground!"
+                onClick={() => navigate("/create")}
+              >
+                <Plus size={11} />
+                <span>New Collection</span>
+              </Button>
+            </div>
+
+            <ScrollArea className="h-64 rounded-[8px] **:data-[slot=scroll-area-scrollbar]:hidden">
+              <CollectionList collections={data.collections} />
+            </ScrollArea>
+          </div>
+
+          <Button
+            type="button"
+            className="rounded-4xl"
+            size="lg"
+            disabled={isEmpty || isPending}
+            onClick={() => handleSave()}
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

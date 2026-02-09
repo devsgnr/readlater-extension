@@ -26,4 +26,9 @@ const useChromeRuntimeGetCollections = () => {
   });
 };
 
-export { useGetCollections, useChromeRuntimeGetCollections };
+
+
+export {
+  useGetCollections,
+  useChromeRuntimeGetCollections,
+};

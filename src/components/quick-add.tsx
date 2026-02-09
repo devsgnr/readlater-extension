@@ -8,7 +8,7 @@ import {
 import type { User } from "@/types";
 import { ProfileImage } from "./image";
 import { Button } from "./ui/button";
-import { useCreateBookmark } from "@/api/hooks/mutations";
+import { useChromeRuntimeCreateBookmark } from "@/api/hooks/mutations";
 import { usePayloadContext } from "@/hooks";
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
 const QuickAdd = ({ user }: Props) => {
   const { payload } = usePayloadContext();
 
-  const { mutate, isPending } = useCreateBookmark();
+  const { mutate, isPending } = useChromeRuntimeCreateBookmark();
 
   const handleQuickAdd = () => {
     if (!payload) return;
@@ -26,15 +26,16 @@ const QuickAdd = ({ user }: Props) => {
     mutate(payload, {
       onSuccess: () => {
         console.log("Success");
-        chrome.storage.session.remove("READLATER_PAYLOAD");
+        chrome.storage.local.remove("READLATER_PAYLOAD");
+        window.postMessage({ type: "CLOSE_UI" }, "*");
       },
     });
   };
 
   return (
-    <Item variant="outline" className="h-fit p-1! gap-2" asChild>
+    <Item variant="default" className="h-fit p-1! gap-2" asChild>
       <Button
-        variant="outline"
+        variant="ghost"
         className="h-fit text-left items-start cursor-pointer p-1!"
         onClick={() => handleQuickAdd()}
         disabled={isPending}
@@ -47,11 +48,11 @@ const QuickAdd = ({ user }: Props) => {
           />
         </ItemMedia>
         <ItemContent className="gap-0.5">
-          <ItemTitle className="font-expose font-bold text-sm">
-            Quick Add
+          <ItemTitle className="font-expose font-medium text-sm">
+            Profile
           </ItemTitle>
           <ItemDescription className="text-xs font-sans text-muted-foreground">
-            Add your bookmark to your profile
+            Quickly add to your profile
           </ItemDescription>
         </ItemContent>
       </Button>

@@ -13,11 +13,25 @@ const PayloadProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const payload = (window as any).__READLATER_PAYLOAD__;
-    setPayload({ bookmark: payload });
+    setPayload(payload as CreateBookmarkInput);
   }, []);
 
+  const handleCollectionToggle = (id: string) => {
+    setPayload((pyld) => {
+      if (!pyld?.bookmark) return pyld;
+
+      const collections = pyld.collections || [];
+      const inCollection = collections.includes(id);
+
+      return {
+        bookmark: pyld.bookmark,
+        collections: inCollection ? collections.filter((v) => v !== id) : [...collections, id],
+      };
+    });
+  };
+
   return (
-    <PayloadContext.Provider value={{ payload, setPayload }}>
+    <PayloadContext.Provider value={{ payload, setPayload, handleCollectionToggle }}>
       {children}
     </PayloadContext.Provider>
   );

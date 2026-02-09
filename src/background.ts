@@ -1,3 +1,4 @@
+import { CreateBookmark, CreateCollection } from "./api/mutations";
 import { GetCollections } from "./api/queries";
 
 /**
@@ -14,6 +15,14 @@ chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
       case "GET_READLATER_COLLECTIONS":
         const { data } = await GetCollections();
         sendResponse({ ...data.result.data });
+        break;
+      case "CREATE_READLATER_BOOKMARK":
+        const res = await CreateBookmark({ ...msg.payload });
+        sendResponse({ status: res.data });
+        break;
+      case "CREATE_READLATER_COLLECTION":
+        const collection = await CreateCollection({ ...msg.payload });
+        sendResponse({ status: collection.data });
         break;
     }
   })();
@@ -101,12 +110,17 @@ chrome.action.onClicked.addListener(async (tab) => {
   /** Check if script is already injected */
   try {
     await chrome.tabs.sendMessage(tab.id, { type: "PING" });
-    /** Script already injected, do nothing or show UI again */
+    /** Script already injected, send message to show UI */
+    await chrome.tabs.sendMessage(tab.id, { type: "GET_HIGHLIGHT_DATA" });
   } catch {
-    /** Script not injected, inject it */
+    /** Script not injected, inject it first */
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       files: ["content.js"],
     });
+    /** Wait for script to load, then send message */
+    setTimeout(async () => {
+      await chrome.tabs.sendMessage(tab.id!, { type: "GET_HIGHLIGHT_DATA" });
+    }, 100);
   }
 });

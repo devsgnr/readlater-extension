@@ -21,6 +21,29 @@ const InjectStyles = async (shadowRoot: ShadowRoot) => {
 };
 
 /**
+ * Inject Fonts
+ */
+const InjectFonts = async (shadowRoot: ShadowRoot) => {
+  const fonts = [
+    "fonts/open_runde/OpenRunde-Regular.woff2",
+    "fonts/switzer/Switzer-Variable.woff2",
+    "fonts/expose/Expose-Variable.woff2",
+  ];
+
+  fonts.forEach((font) => {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "font";
+    link.type = "font/woff2";
+    link.href = chrome.runtime.getURL(font);
+    link.crossOrigin = "anonymous";
+    document.head.appendChild(link);
+
+    shadowRoot.append(link);
+  });
+};
+
+/**
  * Function for injecting UI for interaction
  */
 const InjectUI = async (payload: any) => {
@@ -39,7 +62,7 @@ const InjectUI = async (payload: any) => {
     width: "320px",
     height: "auto",
     zIndex: "2147483647",
-    borderRadius: "8px",
+    borderRadius: "24px",
     backgroundColor: "var(--background)",
     overflow: "hidden",
     boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1)",
@@ -48,6 +71,16 @@ const InjectUI = async (payload: any) => {
   /** Append the DIV to the document as Child */
   document.body.appendChild(host);
 
+  /** Close UI when clicking outside and clear the payload */
+  const handleClickOutside = (e: MouseEvent) => {
+    if (!host.contains(e.target as Node)) {
+      host.remove();
+      chrome.storage.local.remove("READLATER_PAYLOAD");
+      document.removeEventListener("click", handleClickOutside);
+    }
+  };
+  setTimeout(() => document.addEventListener("click", handleClickOutside), 0);
+
   /** Attach Shadow DOM Tree: Preserve CSS and more */
   const shadow = host.attachShadow({ mode: "open" });
 
@@ -55,15 +88,18 @@ const InjectUI = async (payload: any) => {
   const appRoot = document.createElement("div");
   shadow.appendChild(appRoot);
 
+  /** Inject Fonts */
+  await InjectFonts(shadow);
+
   /** Inject Inline CSS */
   await InjectStyles(shadow);
 
   /** Store Data in Window */
-  (window as any).__READLATER_PAYLOAD__ = payload;
+  (window as any).__READLATER_PAYLOAD__ = { bookmark: payload };
 
   /** Dynamically Import: and Render App */
   import(chrome.runtime.getURL("app.js")).then(({ render }) => {
-    render(appRoot);
+    render(appRoot, shadow);
   });
 };
 
@@ -94,23 +130,22 @@ chrome.runtime.onMessage.addListener(async (message, _, sendResponse) => {
   switch (message.type) {
     case "GET_HIGHLIGHT_DATA":
       const selection = window.getSelection();
+      const og_title = document.querySelector('meta[name="og:title"]');
+      const og_image = document.querySelector('meta[property="og:image"]');
       const description = document.querySelector('meta[name="description"]');
-      const og_description = document.querySelector(
-        'meta[name="og:description"]',
-      );
-      const x_description = document.querySelector(
-        'meta[name="twitter:description"]',
-      );
+      const og_description = document.querySelector('meta[property="og:description"]');
+      const x_description = document.querySelector('meta[name="twitter:description"]');
       const _description =
         description?.getAttribute("content") ||
         og_description?.getAttribute("content") ||
         x_description?.getAttribute("content");
 
       const payload = {
-        content: selection?.toString(),
-        title: document.title,
+        content: selection?.toString() || _description,
+        title: og_title?.getAttribute("content") || document.title,
         url: location.href,
         description: _description,
+        image: og_image?.getAttribute("content"),
       };
 
       await InjectUI(payload);
@@ -119,8 +154,3 @@ chrome.runtime.onMessage.addListener(async (message, _, sendResponse) => {
   }
   return true;
 });
-
-(async () => {
-  await InjectUI({});
-  return { status: "ok" };
-})();

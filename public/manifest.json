@@ -16,7 +16,13 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["app.js", "readlater-extension.css"],
+      "resources": [
+        "app.js",
+        "readlater-extension.css",
+        "fonts/**/*.woff2",
+        "fonts/**/*.woff",
+        "fonts/**/*.ttf"
+      ],
       "matches": ["<all_urls>"]
     }
   ],
