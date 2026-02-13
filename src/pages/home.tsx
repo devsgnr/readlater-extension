@@ -1,5 +1,6 @@
 import { useChromeRuntimeCreateBookmark } from "@/api/hooks/mutations";
 import { useChromeRuntimeGetCollections } from "@/api/hooks/queries";
+import CollectionsListEmptyState from "@/components/collection-empty-state";
 import CollectionList from "@/components/collection-list";
 import QuickAdd from "@/components/quick-add";
 import { Button } from "@/components/ui/button";
@@ -48,17 +49,21 @@ const Home = () => {
               <Button
                 size="sm"
                 variant="ghost"
-                className="h-fit py-0.5 px-1 text-xs items-center cursor-pointer hover:text-muted-foreground!"
+                className="h-fit py-0.5 px-1 pl-0.5 text-xs items-center cursor-pointer text-muted-foreground!"
                 onClick={() => navigate("/create")}
               >
                 <Plus size={11} />
-                <span>New Collection</span>
+                <span>New</span>
               </Button>
             </div>
 
-            <ScrollArea className="h-64 rounded-[8px] **:data-[slot=scroll-area-scrollbar]:hidden">
-              <CollectionList collections={data.collections} />
-            </ScrollArea>
+            {!isLoading && !isEmpty && (
+              <ScrollArea className="h-64 rounded-[8px] **:data-[slot=scroll-area-scrollbar]:hidden">
+                <CollectionList collections={data.collections} />
+              </ScrollArea>
+            )}
+
+            {!isLoading && isEmpty && <CollectionsListEmptyState />}
           </div>
 
           <Button

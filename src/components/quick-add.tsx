@@ -1,10 +1,4 @@
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item";
+import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import type { User } from "@/types";
 import { ProfileImage } from "./image";
 import { Button } from "./ui/button";
@@ -25,7 +19,6 @@ const QuickAdd = ({ user }: Props) => {
 
     mutate(payload, {
       onSuccess: () => {
-        console.log("Success");
         chrome.storage.local.remove("READLATER_PAYLOAD");
         window.postMessage({ type: "CLOSE_UI" }, "*");
       },
@@ -41,17 +34,11 @@ const QuickAdd = ({ user }: Props) => {
         disabled={isPending}
       >
         <ItemMedia className="translate-y-0! overflow-hidden rounded-[6px]">
-          <ProfileImage
-            className="size-10"
-            src={user?.image}
-            alt={user?.name}
-          />
+          <ProfileImage className="size-10" src={user?.image} alt={user?.name} />
         </ItemMedia>
         <ItemContent className="gap-0.5">
-          <ItemTitle className="font-expose font-medium text-sm">
-            Profile
-          </ItemTitle>
-          <ItemDescription className="text-xs font-sans text-muted-foreground">
+          <ItemTitle className="font-tasa font-semibold text-sm">Profile</ItemTitle>
+          <ItemDescription className="text-xs font-medium text-muted-foreground">
             Quickly add to your profile
           </ItemDescription>
         </ItemContent>

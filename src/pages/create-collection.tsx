@@ -75,7 +75,7 @@ const CreateCollection = () => {
                 size="lg"
                 variant="outline"
                 type="submit"
-                disabled={isPending}
+                disabled={!formik.values.name || isPending}
               >
                 Create Collection
               </Button>

@@ -11,6 +11,25 @@ if ((window as any).__READLATER_INJECTED__) {
  * Function for injecting CSS Inline
  */
 const InjectStyles = async (shadowRoot: ShadowRoot) => {
+  // Load local font CSS files
+  const localFonts = ["open_runde/stylesheet.css", "tasa/stylesheet.css"];
+
+  for (const file of localFonts) {
+    const url = chrome.runtime.getURL(file);
+    let fontCss = await fetch(url).then((res) => res.text());
+
+    // Replace relative font URLs with chrome-extension:// URLs
+    const fontDir = file.split("/")[0];
+    fontCss = fontCss.replace(/url\((['"]?)([^'")]+)\1\)/g, (_, __, fontFile) => {
+      return `url("${chrome.runtime.getURL(`${fontDir}/${fontFile}`)}")`;
+    });
+
+    const style = document.createElement("style");
+    style.textContent = fontCss;
+    shadowRoot.appendChild(style);
+  }
+
+  // Load main CSS
   const url = chrome.runtime.getURL("readlater-extension.css");
   const cssText = await fetch(url).then((res) => res.text());
 
@@ -18,29 +37,6 @@ const InjectStyles = async (shadowRoot: ShadowRoot) => {
   style.textContent = cssText;
 
   shadowRoot.appendChild(style);
-};
-
-/**
- * Inject Fonts
- */
-const InjectFonts = async (shadowRoot: ShadowRoot) => {
-  const fonts = [
-    "fonts/open_runde/OpenRunde-Regular.woff2",
-    "fonts/switzer/Switzer-Variable.woff2",
-    "fonts/expose/Expose-Variable.woff2",
-  ];
-
-  fonts.forEach((font) => {
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "font";
-    link.type = "font/woff2";
-    link.href = chrome.runtime.getURL(font);
-    link.crossOrigin = "anonymous";
-    document.head.appendChild(link);
-
-    shadowRoot.append(link);
-  });
 };
 
 /**
@@ -53,6 +49,7 @@ const InjectUI = async (payload: any) => {
   /** Create DIV and Assign the ID to it */
   const host = document.createElement("div");
   host.id = ROOT_ID;
+  host.classList.add("dark");
 
   /** Inject Styling */
   Object.assign(host.style, {
@@ -75,21 +72,18 @@ const InjectUI = async (payload: any) => {
   const handleClickOutside = (e: MouseEvent) => {
     if (!host.contains(e.target as Node)) {
       host.remove();
-      chrome.storage.local.remove("READLATER_PAYLOAD");
+      (window as any).__READLATER_PAYLOAD__ = undefined;
       document.removeEventListener("click", handleClickOutside);
     }
   };
   setTimeout(() => document.addEventListener("click", handleClickOutside), 0);
 
   /** Attach Shadow DOM Tree: Preserve CSS and more */
-  const shadow = host.attachShadow({ mode: "open" });
+  const shadow = host.attachShadow({ mode: "closed" });
 
   /** Create a DIV for Shadow DOM */
   const appRoot = document.createElement("div");
   shadow.appendChild(appRoot);
-
-  /** Inject Fonts */
-  await InjectFonts(shadow);
 
   /** Inject Inline CSS */
   await InjectStyles(shadow);

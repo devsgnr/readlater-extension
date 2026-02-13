@@ -24,7 +24,7 @@ const Header = () => {
         >
           <ChevronLeft size={14} />
         </Button>
-        <p className="text-base! font-semibold font-expose tracking-normal">{HeaderTitle()}</p>
+        <p className="text-base font-semibold font-tasa tracking-normal">{HeaderTitle()}</p>
       </div>
     </div>
   );

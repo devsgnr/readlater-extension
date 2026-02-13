@@ -1,11 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from "@/components/ui/field";
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { usePayloadContext } from "@/hooks";
 import type { Collection } from "@/types";
 
@@ -20,10 +14,7 @@ const CollectionList = ({ collections }: Props) => {
     <FieldSet>
       <FieldGroup className="gap-3">
         {collections.map((collection) => (
-          <Field
-            orientation="horizontal"
-            className="rounded-[8px] hover:bg-muted p-1 pr-2"
-          >
+          <Field orientation="horizontal" className="rounded-[8px] hover:bg-muted p-1 pr-2">
             <FieldLabel
               key={collection.id}
               htmlFor={collection.id}
@@ -35,7 +26,7 @@ const CollectionList = ({ collections }: Props) => {
                 </div>
                 <div className="flex flex-col gap-0">
                   <p className="text-sm font-semibold">{collection.name}</p>
-                  <FieldDescription className="text-xs">
+                  <FieldDescription className="text-xs font-medium">
                     {collection.count} texts
                   </FieldDescription>
                 </div>

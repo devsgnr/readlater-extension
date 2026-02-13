@@ -1,0 +1,34 @@
+/* Variable fonts usage:
+:root { font-family: "Open Runde", sans-serif; }
+ */
+
+/* static fonts */
+
+@font-face {
+  font-family: "Open Runde";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("OpenRunde-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Open Runde";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("OpenRunde-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Open Runde";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("OpenRunde-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Open Runde";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("OpenRunde-Bold.woff2") format("woff2");
+}

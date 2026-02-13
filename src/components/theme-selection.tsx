@@ -14,10 +14,8 @@ const ThemeSelection = () => {
   return (
     <div className="flex items-start justify-between">
       <div className="flex flex-col items-start">
-        <p className="text-sm font-semibold font-expose">Theme</p>
-        <p className="text-xs font-sans text-muted-foreground">
-          Readlater Extension Theme
-        </p>
+        <p className="text-sm font-semibold font-tasa">Theme</p>
+        <p className="text-xs font-sans text-muted-foreground">Readlater Extension Theme</p>
       </div>
 
       <DropdownMenu>
@@ -32,24 +30,15 @@ const ThemeSelection = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            className="text-xs"
-            onClick={() => setTheme("system")}
-          >
+          <DropdownMenuItem className="text-xs" onClick={() => setTheme("system")}>
             <MonitorIcon size={15} />
             System
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-xs"
-            onClick={() => setTheme("dark")}
-          >
+          <DropdownMenuItem className="text-xs" onClick={() => setTheme("dark")}>
             <MoonIcon size={15} />
             Dark
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-xs"
-            onClick={() => setTheme("light")}
-          >
+          <DropdownMenuItem className="text-xs" onClick={() => setTheme("light")}>
             <SunIcon size={15} />
             Light
           </DropdownMenuItem>

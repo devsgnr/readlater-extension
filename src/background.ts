@@ -64,7 +64,7 @@ chrome.runtime.onMessageExternal.addListener(async (msg, _, sendResponse) => {
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "SAVE_TO_READLATER",
-    title: "Save to Readlater",
+    title: "Read later",
     contexts: ["selection"],
   });
 });

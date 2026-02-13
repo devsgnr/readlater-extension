@@ -17,7 +17,7 @@ const Auth = () => {
     <div className="w-full flex flex-col gap-3 p-3">
       <div className="w-full flex flex-col items-center gap-1.5">
         <Loader2 className="animate-spin" size={16} />
-        <p className="text-sm font-expose font-semibold">Loading...</p>
+        <p className="text-sm font-tasa font-semibold">Loading...</p>
         <p className="text-xs font-semibold text-muted-foreground tracking-tight">
           Authenticating Readlater Saver
         </p>

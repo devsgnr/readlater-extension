@@ -15,16 +15,17 @@ const VisibilityToggle = ({ onToggle, defaultChecked }: Props) => {
   return (
     <Field orientation="horizontal" className="max-w-sm">
       <FieldContent className="gap-1">
-        <FieldLabel htmlFor="collection-visibility" className="text-sm">
+        <FieldLabel htmlFor="collection-visibility" className="text-sm cursor-pointer">
           Make collection private
         </FieldLabel>
         <FieldDescription className="text-xs font-medium">
-          Only you can set your collection and content of your collection
+          Only you can see your collection and content of your collection
         </FieldDescription>
       </FieldContent>
 
       <Switch
         id="collection-visibility"
+        className="cursor-pointer"
         defaultChecked={defaultChecked === "private"}
         onCheckedChange={(b) => handleToggle(b)}
       />

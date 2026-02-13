@@ -5,7 +5,6 @@ import { MemoryRouter } from "react-router";
 import { Routes } from "react-router";
 import AppRoutes from "./routes/AppRoutes";
 import PayloadProvider from "./provider/PayloadProvider";
-import { ThemeProvider } from "./components/theme-provider";
 import ShadowRootProvider from "./provider/ShadowRootProvider";
 
 interface Props {
@@ -16,13 +15,11 @@ function App({ shadowRoot }: Props) {
   return (
     <StrictMode>
       <ShadowRootProvider shadowRoot={shadowRoot}>
-        <ThemeProvider defaultTheme="system" storageKey="readlater-extension">
-          <PayloadProvider>
-            <MemoryRouter initialEntries={["/"]}>
-              <Routes>{AppRoutes}</Routes>
-            </MemoryRouter>
-          </PayloadProvider>
-        </ThemeProvider>
+        <PayloadProvider>
+          <MemoryRouter initialEntries={["/"]}>
+            <Routes>{AppRoutes}</Routes>
+          </MemoryRouter>
+        </PayloadProvider>
       </ShadowRootProvider>
     </StrictMode>
   );

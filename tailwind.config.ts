@@ -11,12 +11,11 @@ const config = {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      sans: ["var(--font-sans)"],
+      tasa: ["var(--font-tasa)"],
+    },
     extend: {
-      fontFamily: {
-        sans: ['"OpenRunde"', "system-ui", "sans-serif"],
-        switzer: ['"Switzer-Variable"', "system-ui", "sans-serif"],
-        expose: ['"Expose-Variable"', "system-ui", "sans-serif"],
-      },
       colors: {
         border: "var(--border)",
         input: "var(--input)",

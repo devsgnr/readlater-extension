@@ -1,0 +1,13 @@
+/* Variable fonts usage:
+:root { font-family: "TASA Orbiter", sans-serif; }
+*/
+
+/* Variable Font */
+
+@font-face {
+  font-family: "TASA Orbiter";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("TASAOrbiterVariable.woff2") format("woff2");
+}
