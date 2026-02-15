@@ -49,7 +49,6 @@ const InjectUI = async (payload: any) => {
   /** Create DIV and Assign the ID to it */
   const host = document.createElement("div");
   host.id = ROOT_ID;
-  host.classList.add("dark");
 
   /** Inject Styling */
   Object.assign(host.style, {
@@ -60,7 +59,6 @@ const InjectUI = async (payload: any) => {
     height: "auto",
     zIndex: "2147483647",
     borderRadius: "24px",
-    backgroundColor: "var(--background)",
     overflow: "hidden",
     boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1)",
   });

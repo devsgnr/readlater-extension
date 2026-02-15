@@ -18,7 +18,7 @@ const AppLayout = () => {
 
   return (
     <QueryClientProvider client={ExtAppClient}>
-      <div className="w-full bg-background text-foreground rounded-[8px]">
+      <div className="w-full light bg-background text-foreground rounded-[8px]">
         <Header />
         <Outlet />
       </div>

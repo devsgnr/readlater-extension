@@ -6,6 +6,7 @@ import QuickAdd from "@/components/quick-add";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePayloadContext } from "@/hooks";
+import { cn } from "@/lib/utils";
 import { Loader, Plus } from "lucide-react";
 import { useNavigate } from "react-router";
 
@@ -57,13 +58,17 @@ const Home = () => {
               </Button>
             </div>
 
-            {!isLoading && !isEmpty && (
-              <ScrollArea className="h-64 rounded-[8px] **:data-[slot=scroll-area-scrollbar]:hidden">
+            {!isLoading && data.collections.length > 0 && (
+              <ScrollArea
+                className={cn("h-full rounded-[8px] **:data-[slot=scroll-area-scrollbar]:hidden", {
+                  "h-64": data.collections.length >= 4,
+                })}
+              >
                 <CollectionList collections={data.collections} />
               </ScrollArea>
             )}
 
-            {!isLoading && isEmpty && <CollectionsListEmptyState />}
+            {!isLoading && data.collections.length === 0 && <CollectionsListEmptyState />}
           </div>
 
           <Button
