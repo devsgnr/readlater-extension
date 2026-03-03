@@ -13,7 +13,7 @@ const CollectionList = ({ collections, isLoading }: Props) => {
 
   return (
     <FieldSet>
-      <FieldGroup className="gap-3">
+      <FieldGroup className="gap-1">
         {collections.map((collection) => (
           <Field
             orientation="horizontal"

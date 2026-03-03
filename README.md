@@ -55,33 +55,58 @@ Content scripts injected via `chrome.scripting.executeScript` need to be self-co
 
 ### 1. Background Script (`background.ts`)
 
-Handles:
+Service worker that handles:
 - Context menu creation ("Read later" on text selection)
 - Extension icon clicks
 - Dynamic content script injection
-- Message passing between content scripts and background
+- Message passing between content scripts and UI
 - External messages from the web app for authentication
+- API calls for collections and bookmarks
+
+**Internal Message Actions:**
+- `OPEN_AUTH_TAB` - Opens authentication page in new tab
+- `GET_READLATER_COLLECTIONS` - Fetches user's collections
+- `CREATE_READLATER_BOOKMARK` - Creates a new bookmark
+- `CREATE_READLATER_COLLECTION` - Creates a new collection
+
+**External Message Actions (from web app):**
+- `READLATER_AUTH` - Stores auth token in `chrome.storage.local`
+- `READLATER_REVOKE` - Removes auth token from storage
 
 ### 2. Content Script (`content.ts`)
 
-Injected into web pages to:
-- Extract page metadata (title, description, images)
-- Use Readability to parse article content
-- Inject React UI into Shadow DOM
+Dynamically injected into web pages to:
+- Extract page metadata (title, description, OG tags, images)
+- Use `@mozilla/readability` to parse article content
+- Inject React UI into Shadow DOM for CSS isolation
+- Sanitize HTML content and remove ads/scripts
 - Handle messages from background script
 
 **Message Types:**
-- `PING` - Check if script is already injected
-- `GET_HIGHLIGHT_DATA` - Extract selected text + metadata
-- `GET_WHOLE_PAGE` - Extract full article using Readability
+- `PING` - Check if script is already injected (prevents duplicate injection)
+- `GET_HIGHLIGHT_DATA` - Extract selected text + metadata when user right-clicks
+- `GET_WHOLE_PAGE` - Extract full article using Readability when icon is clicked
+
+**UI Injection:**
+- Creates a fixed-position div (`readlater-root`) in top-right corner
+- Attaches Shadow DOM for CSS isolation
+- Loads fonts and styles dynamically via `chrome.runtime.getURL`
+- Stores bookmark payload in `window.__READLATER_PAYLOAD__`
+- Closes UI when clicking outside
 
 ### 3. React UI (`App.tsx`)
 
 Renders inside Shadow DOM with:
-- Authentication flow
-- Collection selection
-- Quick bookmark creation
-- Theme support (light/dark)
+- **Authentication flow** - Redirects to web app for login
+- **Collection selection** - Multi-select with checkboxes
+- **Create new collection** - Form with name, emoji, and visibility toggle
+- **Save bookmark** - Saves to selected collections
+- **User profile display** - Shows authenticated user info
+
+**Routes:**
+- `/` - Home page (collection list + save button)
+- `/create` - Create new collection form
+- `/auth` - Authentication redirect page
 
 ## API Integration
 
@@ -160,7 +185,7 @@ Web accessible resources:
 ## Blocked Domains
 
 Extension is disabled on:
-- `localhost:3000` (dev server)
-- `app.readlater.fyi` (production app)
+- `localhost:3002` (dev server)
+- `*.readlater.fyi` (production domain)
 
 This prevents conflicts when developing or using the web app.

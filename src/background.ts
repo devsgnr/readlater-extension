@@ -81,7 +81,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (!tab.url.startsWith("http")) return;
 
   /** Block on dev and production app */
-  if (tab.url.includes("localhost:3002") || tab.url.includes("app.readlater.fyi")) return;
+  if (tab.url.includes("localhost:3002") || tab.url.includes("readlater.fyi")) return;
 
   /** Check if script is already injected */
   try {
@@ -114,7 +114,7 @@ chrome.action.onClicked.addListener(async (tab) => {
   if (!tab.url.startsWith("http")) return;
 
   /** Block on dev and production app */
-  if (tab.url.includes("localhost:3002") || tab.url.includes("app.readlater.fyi")) return;
+  if (tab.url.includes("localhost:3002") || tab.url.includes("readlater.fyi")) return;
 
   /** Check if script is already injected */
   try {

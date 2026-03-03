@@ -5,6 +5,7 @@ type User = {
   email: string;
   emailVerified: boolean;
   name: string;
+  username?: string;
   image?: string | null | undefined;
 };
 

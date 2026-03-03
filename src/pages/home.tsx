@@ -2,7 +2,7 @@ import { useChromeRuntimeCreateBookmark } from "@/api/hooks/mutations";
 import { useChromeRuntimeGetCollections } from "@/api/hooks/queries";
 import CollectionsListEmptyState from "@/components/collection-empty-state";
 import CollectionList from "@/components/collection-list";
-import QuickAdd from "@/components/quick-add";
+import Profile from "@/components/profile";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePayloadContext } from "@/hooks";
@@ -41,7 +41,7 @@ const Home = () => {
 
       {!isLoading && data && (
         <div className="w-full flex flex-col gap-3 px-2 pb-0">
-          <QuickAdd user={data.user} isPending={isPending} onSave={handleSave} />
+          <Profile user={data.user} />
 
           <div className="w-full h-full flex flex-col gap-1.5">
             <div className="flex w-full items-center justify-between text-xs text-muted-foreground!">
