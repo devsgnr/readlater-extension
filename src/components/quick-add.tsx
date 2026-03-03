@@ -2,35 +2,20 @@ import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/comp
 import type { User } from "@/types";
 import { ProfileImage } from "./image";
 import { Button } from "./ui/button";
-import { useChromeRuntimeCreateBookmark } from "@/api/hooks/mutations";
-import { usePayloadContext } from "@/hooks";
 
 interface Props {
   user: User;
+  isPending: boolean;
+  onSave: () => void;
 }
 
-const QuickAdd = ({ user }: Props) => {
-  const { payload } = usePayloadContext();
-
-  const { mutate, isPending } = useChromeRuntimeCreateBookmark();
-
-  const handleQuickAdd = () => {
-    if (!payload) return;
-
-    mutate(payload, {
-      onSuccess: () => {
-        chrome.storage.local.remove("READLATER_PAYLOAD");
-        window.postMessage({ type: "CLOSE_UI" }, "*");
-      },
-    });
-  };
-
+const QuickAdd = ({ user, isPending, onSave }: Props) => {
   return (
     <Item variant="default" className="h-fit p-1! gap-2" asChild>
       <Button
         variant="ghost"
         className="h-fit text-left items-start cursor-pointer p-1!"
-        onClick={() => handleQuickAdd()}
+        onClick={onSave}
         disabled={isPending}
       >
         <ItemMedia className="translate-y-0! overflow-hidden rounded-[6px]">

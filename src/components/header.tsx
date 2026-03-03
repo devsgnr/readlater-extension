@@ -8,7 +8,11 @@ const Header = () => {
   const navigate = useNavigate();
 
   const HeaderTitle = () => {
-    return cn({ Readlater: pathname == "/", "New Collection": pathname === "/create" });
+    return cn({
+      Readlater: pathname == "/",
+      Authorization: pathname == "/auth",
+      "New Collection": pathname === "/create",
+    });
   };
 
   return (

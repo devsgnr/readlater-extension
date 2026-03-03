@@ -41,7 +41,7 @@ const Home = () => {
 
       {!isLoading && data && (
         <div className="w-full flex flex-col gap-3 px-2 pb-0">
-          <QuickAdd user={data.user} />
+          <QuickAdd user={data.user} isPending={isPending} onSave={handleSave} />
 
           <div className="w-full h-full flex flex-col gap-1.5">
             <div className="flex w-full items-center justify-between text-xs text-muted-foreground!">
@@ -52,6 +52,7 @@ const Home = () => {
                 variant="ghost"
                 className="h-fit py-0.5 px-1 pl-0.5 text-xs items-center cursor-pointer text-muted-foreground!"
                 onClick={() => navigate("/create")}
+                disabled={isPending}
               >
                 <Plus size={11} />
                 <span>New</span>
@@ -64,7 +65,7 @@ const Home = () => {
                   "h-64": data.collections.length >= 4,
                 })}
               >
-                <CollectionList collections={data.collections} />
+                <CollectionList collections={data.collections} isLoading={isPending} />
               </ScrollArea>
             )}
 

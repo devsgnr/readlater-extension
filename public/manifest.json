@@ -19,6 +19,7 @@
       "resources": [
         "app.js",
         "readlater-extension.css",
+        "chunks/*.js",
         "open_runde/*.woff2",
         "open_runde/*.css",
         "tasa/*.woff2",

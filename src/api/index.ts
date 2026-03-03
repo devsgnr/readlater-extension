@@ -1,7 +1,7 @@
 import axios from "axios";
 import { QueryClient } from "@tanstack/react-query";
 
-const BASE_URL = `${import.meta.env.VITE_BASE_URL}/api/v1/extension`;
+const BASE_URL = `${import.meta.env.VITE_BASE_URL}/api/v1/trpc`;
 
 const Axios = axios.create({
   baseURL: BASE_URL,

@@ -12,18 +12,21 @@ chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
         await chrome.tabs.create({ url: msg.url });
         sendResponse({ status: "ok" });
         break;
-      case "GET_READLATER_COLLECTIONS":
+      case "GET_READLATER_COLLECTIONS": {
         const { data } = await GetCollections();
         sendResponse({ ...data.result.data });
         break;
-      case "CREATE_READLATER_BOOKMARK":
+      }
+      case "CREATE_READLATER_BOOKMARK": {
         const res = await CreateBookmark({ ...msg.payload });
         sendResponse({ status: res.data });
         break;
-      case "CREATE_READLATER_COLLECTION":
+      }
+      case "CREATE_READLATER_COLLECTION": {
         const collection = await CreateCollection({ ...msg.payload });
         sendResponse({ status: collection.data });
         break;
+      }
     }
   })();
 
@@ -77,6 +80,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   /** Make sure to run only in the right environment */
   if (!tab.url.startsWith("http")) return;
 
+  /** Block on dev and production app */
+  if (tab.url.includes("localhost:3002") || tab.url.includes("app.readlater.fyi")) return;
+
   /** Check if script is already injected */
   try {
     await chrome.tabs.sendMessage(tab.id, { type: "PING" });
@@ -91,7 +97,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     /** Wait for script to load, then send message */
     setTimeout(async () => {
       await chrome.tabs.sendMessage(tab.id!, { type: "GET_HIGHLIGHT_DATA" });
-    }, 100);
+    }, 200);
   }
 });
 
@@ -107,11 +113,14 @@ chrome.action.onClicked.addListener(async (tab) => {
   /** Make sure to run only in the right environment */
   if (!tab.url.startsWith("http")) return;
 
+  /** Block on dev and production app */
+  if (tab.url.includes("localhost:3002") || tab.url.includes("app.readlater.fyi")) return;
+
   /** Check if script is already injected */
   try {
     await chrome.tabs.sendMessage(tab.id, { type: "PING" });
     /** Script already injected, send message to show UI */
-    await chrome.tabs.sendMessage(tab.id, { type: "GET_HIGHLIGHT_DATA" });
+    await chrome.tabs.sendMessage(tab.id, { type: "GET_WHOLE_PAGE" });
   } catch {
     /** Script not injected, inject it first */
     await chrome.scripting.executeScript({
@@ -120,7 +129,7 @@ chrome.action.onClicked.addListener(async (tab) => {
     });
     /** Wait for script to load, then send message */
     setTimeout(async () => {
-      await chrome.tabs.sendMessage(tab.id!, { type: "GET_HIGHLIGHT_DATA" });
-    }, 100);
+      await chrome.tabs.sendMessage(tab.id!, { type: "GET_WHOLE_PAGE" });
+    }, 200);
   }
 });

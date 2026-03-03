@@ -5,20 +5,26 @@ import type { Collection } from "@/types";
 
 interface Props {
   collections: Collection[];
+  isLoading: boolean;
 }
 
-const CollectionList = ({ collections }: Props) => {
+const CollectionList = ({ collections, isLoading }: Props) => {
   const { payload, handleCollectionToggle } = usePayloadContext();
 
   return (
     <FieldSet>
       <FieldGroup className="gap-3">
         {collections.map((collection) => (
-          <Field orientation="horizontal" className="rounded-[8px] hover:bg-muted p-1 pr-2">
+          <Field
+            orientation="horizontal"
+            className="rounded-[8px] hover:bg-muted p-1 pr-2"
+            aria-disabled={isLoading}
+          >
             <FieldLabel
               key={collection.id}
               htmlFor={collection.id}
               className="flex items-start justify-between cursor-pointer"
+              aria-disabled={isLoading}
             >
               <div className="w-full flex items-center gap-1.5">
                 <div className="size-12 bg-secondary text-2xl flex items-center justify-center rounded-[8px]">
@@ -38,6 +44,7 @@ const CollectionList = ({ collections }: Props) => {
               name={collection.id}
               checked={payload?.collections?.includes(collection.id) ?? false}
               onCheckedChange={() => handleCollectionToggle(collection.id)}
+              disabled={isLoading}
             />
           </Field>
         ))}
