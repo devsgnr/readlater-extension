@@ -6,6 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "rm -rf dist && tsc -b && vite build -c vite.config.ts && vite build -c vite.content.config.ts && vite build -c vite.ui.config.ts",
+    "build:ui": "vite build -c vite.ui.config.ts",
+    "build:content": "vite build -c vite.content.config.ts",
+    "build:background": "vite build -c vite.config.ts",
+    "build:prod": "rm -rf dist && tsc -b && bun run build:ui && bun run build:content && bun run build:background",
+    "build:dev": "rm -rf dist && tsc -b && bun run build:ui && bun run build:content && bun run build:background --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
   },

@@ -10,11 +10,12 @@ interface Props {
 
 const CollectionList = ({ collections, isLoading }: Props) => {
   const { payload, handleCollectionToggle } = usePayloadContext();
+  const withoutUnsorted = collections.filter((collection) => !collection.isUnsorted);
 
   return (
     <FieldSet>
       <FieldGroup className="gap-1">
-        {collections.map((collection) => (
+        {withoutUnsorted.map((collection) => (
           <Field
             orientation="horizontal"
             className="rounded-[8px] hover:bg-muted p-1 pr-2"

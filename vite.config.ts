@@ -6,6 +6,7 @@ export default defineConfig({
     transformer: "postcss",
   },
   build: {
+    emptyOutDir: false,
     rollupOptions: {
       input: {
         background: "src/background.ts",

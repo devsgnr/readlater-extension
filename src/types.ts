@@ -17,6 +17,7 @@ type Collection = {
   count: number;
   emoji?: string;
   visibility: "private" | "public";
+  isUnsorted: boolean;
   createdAt: Date | null;
   updatedAt: Date | null;
 };

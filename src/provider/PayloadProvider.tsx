@@ -9,7 +9,7 @@ type Props = {
 };
 
 const PayloadProvider = ({ children }: Props) => {
-  const [payload, setPayload] = useState<CreateBookmarkInput>();
+  const [payload, setPayload] = useState<CreateBookmarkInput>({} as CreateBookmarkInput);
 
   useEffect(() => {
     const payload = (window as any).__READLATER_PAYLOAD__;

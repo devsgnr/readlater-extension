@@ -2,7 +2,7 @@ import { useChromeRuntimeCreateBookmark } from "@/api/hooks/mutations";
 import { useChromeRuntimeGetCollections } from "@/api/hooks/queries";
 import CollectionsListEmptyState from "@/components/collection-empty-state";
 import CollectionList from "@/components/collection-list";
-import Profile from "@/components/profile";
+import QuickAdd from "@/components/quick-add";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePayloadContext } from "@/hooks";
@@ -30,6 +30,22 @@ const Home = () => {
   const Collections = payload?.collections;
   const isEmpty = !Collections || Collections?.length === 0;
 
+  const handleQuickAdd = () => {
+    if (!payload) return;
+
+    const unsorted = data?.collections?.filter((c) => c.isUnsorted)?.map((c) => c.id);
+
+    if (!unsorted || unsorted.length === 0) return;
+
+    const value = { bookmark: payload.bookmark, collections: unsorted };
+    mutate(value, {
+      onSuccess: () => {
+        (window as any).__READLATER_PAYLOAD__ = undefined;
+        window.postMessage({ type: "CLOSE_UI" }, "*");
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col py-2">
       {isLoading && !data && (
@@ -41,7 +57,7 @@ const Home = () => {
 
       {!isLoading && data && (
         <div className="w-full flex flex-col gap-3 px-2 pb-0">
-          <Profile user={data.user} />
+          <QuickAdd user={data.user} isPending={isPending} onSave={() => handleQuickAdd()} />
 
           <div className="w-full h-full flex flex-col gap-1.5">
             <div className="flex w-full items-center justify-between text-xs text-muted-foreground!">

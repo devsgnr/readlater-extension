@@ -11,6 +11,8 @@ A Chrome extension for saving web content to read later. Built with React, TypeS
 - **@mozilla/readability** for article extraction
 - **Axios** for API calls
 - **React Query** for state management
+- **React Router** for navigation
+- **Formik + Yup** for form handling
 
 ## Project Structure
 
@@ -19,37 +21,81 @@ src/
 ├── background.ts          # Service worker (handles extension events)
 ├── content.ts            # Content script (injected into web pages)
 ├── App.tsx               # Main React app entry point
+├── main.tsx              # Entry point for standalone dev mode
 ├── api/
 │   ├── index.ts         # Axios instance with auth interceptor
 │   ├── mutations.ts     # CreateBookmark, CreateCollection
-│   └── queries.ts       # GetCollections
+│   ├── queries.ts       # GetCollections
+│   └── hooks/           # React Query hooks
+│       ├── mutations.ts
+│       └── queries.ts
 ├── components/          # React components
-├── pages/              # Route pages (home, auth, create-collection)
-└── routes/             # React Router configuration
+│   ├── ui/             # Reusable UI components (button, input, etc.)
+│   ├── collection-list.tsx
+│   ├── emoji-picker.tsx
+│   ├── header.tsx
+│   ├── profile.tsx
+│   ├── quick-add.tsx
+│   └── ...
+├── pages/              # Route pages
+│   ├── home.tsx        # Collection list + save button
+│   ├── auth.tsx        # Authentication redirect
+│   └── create-collection.tsx
+├── routes/             # React Router configuration
+│   └── AppRoutes.tsx
+├── layouts/
+│   └── AppLayout.tsx   # Main layout wrapper
+├── provider/           # Context providers
+│   ├── PayloadProvider.tsx
+│   └── ShadowRootProvider.tsx
+├── context/            # React contexts
+│   ├── PayloadContext.tsx
+│   └── ShadowRootContext.tsx
+├── hooks/              # Custom hooks
+├── lib/                # Utilities
+│   └── utils.ts
+├── types.ts            # TypeScript types
+└── schema.ts           # Validation schemas
 ```
 
 ## Build Process
 
 The extension uses **three separate Vite configs** to build different parts:
 
-1. **vite.config.ts** - Builds `background.js` (service worker)
+1. **vite.config.ts** - Builds `background.js` (service worker in ES module format)
 2. **vite.content.config.ts** - Builds `content.js` (content script in IIFE format)
-3. **vite.ui.config.ts** - Builds `app.js` (React UI as library)
+3. **vite.ui.config.ts** - Builds `app.js` (React UI as ES module library)
+
+### Build Scripts
 
 ```bash
+# Full production build
 npm run build
+
+# Individual builds
+npm run build:background  # Build service worker only
+npm run build:content     # Build content script only
+npm run build:ui          # Build React UI only
+
+# Environment-specific builds
+npm run build:prod        # Production build (uses bun)
+npm run build:dev         # Development build with NODE_ENV=development
 ```
 
-This runs:
-1. Clean dist folder
-2. TypeScript compilation
-3. Build background script (ES modules)
-4. Build content script (IIFE format to avoid chunks)
-5. Build React UI (ES modules)
+### Build Pipeline
+
+The `npm run build` command executes:
+1. `rm -rf dist` - Clean dist folder
+2. `tsc -b` - TypeScript compilation check
+3. `vite build -c vite.config.ts` - Build background.js (ES modules)
+4. `vite build -c vite.content.config.ts` - Build content.js (IIFE)
+5. `vite build -c vite.ui.config.ts` - Build app.js + CSS (ES modules)
+
+**Important:** All three configs have `emptyOutDir: false` to prevent overwriting previous builds. They accumulate in the `dist` folder.
 
 ### Why IIFE for content.js?
 
-Content scripts injected via `chrome.scripting.executeScript` need to be self-contained. IIFE format bundles everything (including `@mozilla/readability`) into a single file without external dependencies.
+Content scripts injected via `chrome.scripting.executeScript` need to be self-contained. IIFE format bundles everything (including `@mozilla/readability`) into a single file without external dependencies or chunk splitting.
 
 ## How It Works
 
